@@ -15,7 +15,6 @@ export const COMMENT_QUERY = gql`
             id
             username
          }
-         createdAt
       }
    }
 `;
@@ -76,6 +75,20 @@ export default class CommentContainer extends Component {
                                     getComment: prev.getComment.filter(
                                        comment => comment.id !== id
                                     )
+                                 };
+                              }
+                              if (newComment.mutation === "UPDATED") {
+                                 return {
+                                    ...prev,
+                                    getComment: prev.getComment.map(comment => {
+                                       if (comment.id === newComment.node.id) {
+                                          return {
+                                             ...comment,
+                                             ...newComment.node
+                                          };
+                                       }
+                                       return comment;
+                                    })
                                  };
                               }
                               return {
