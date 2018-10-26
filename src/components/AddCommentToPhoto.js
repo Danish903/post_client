@@ -1,8 +1,11 @@
 import React from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
+import uuid from "uuid/v4";
+
 import { Form, Input, Button } from "semantic-ui-react";
 import { COMMENT_QUERY } from "./CommentContainer";
+import User from "./User";
 import { toast } from "react-semantic-toasts";
 
 const CREATE_COMMNET_MUTATION = gql`
@@ -26,14 +29,13 @@ class AddCommentToPhoto extends React.PureComponent {
    handleSubmit = async createComment => {
       if (!!this.state.text) {
          try {
+            this.setState(() => ({ text: "" }));
             await createComment({
                variables: {
                   text: this.state.text,
                   eventId: this.props.eventId
                }
             });
-
-            this.setState(() => ({ text: "" }));
          } catch (error) {
             const msg = error.message.split(":").pop();
             toast({
@@ -50,57 +52,66 @@ class AddCommentToPhoto extends React.PureComponent {
       this.setState({ [name]: value });
    };
 
-   _update = (cache, payload) => {
+   _update = (cache, { data: { createComment } }) => {
+      const { eventId } = this.props;
       const data = cache.readQuery({
          query: COMMENT_QUERY,
-         variables: { eventId: this.props.eventId }
+         variables: { eventId }
       });
 
+      data.getComment = [createComment, ...data.getComment];
       cache.writeQuery({
          query: COMMENT_QUERY,
-         variables: { eventId: this.props.eventId },
-         data: {
-            ...data,
-            getComment: [payload.data.createComment, ...data.getComment]
-         }
+         variables: { eventId },
+         data
       });
    };
    render() {
       return (
-         <Mutation
-            mutation={CREATE_COMMNET_MUTATION}
-            // optimisticResponse={{
-            //    __typename: "Mutation",
-            //    createComment: {
-            //       __typename: "Comment",
-            //       id: -2343434,
-            //       text: this.state.text,
-            //       createdAt: new Date()
-            //    }
-            // }}
-            // update={this._update}
-         >
-            {(createComment, { loading }) => {
-               return (
-                  <Form reply onSubmit={() => this.handleSubmit(createComment)}>
-                     <Input
-                        fluid
-                        type="text"
-                        placeholder="Add comment..."
-                        action
-                        name="text"
-                        value={this.state.text}
-                        onChange={this._onChange}
-                     >
-                        <input />
-                        <Button loading={loading} type="submit">
-                           Send
-                        </Button>
-                     </Input>
-                  </Form>
-               );
-            }}
-         </Mutation>
+         <User>
+            {({ data: { me } }) => (
+               <Mutation
+                  mutation={CREATE_COMMNET_MUTATION}
+                  optimisticResponse={{
+                     __typename: "Mutation",
+                     createComment: {
+                        __typename: "Comment",
+                        id: uuid(),
+                        text: this.state.text,
+                        createdAt: new Date(),
+                        user: {
+                           __typename: "User",
+                           id: me ? me.id : 1234,
+                           username: me ? me.username : "username"
+                        }
+                     }
+                  }}
+                  update={this._update}
+               >
+                  {createComment => {
+                     return (
+                        <Form
+                           reply
+                           onSubmit={() => this.handleSubmit(createComment)}
+                        >
+                           <Input
+                              fluid
+                              type="text"
+                              placeholder="Add comment..."
+                              action
+                              name="text"
+                              value={this.state.text}
+                              onChange={this._onChange}
+                           >
+                              <input />
+                              <Button type="submit">Send</Button>
+                           </Input>
+                        </Form>
+                     );
+                  }}
+               </Mutation>
+            )}
+         </User>
       );
    }
 }
