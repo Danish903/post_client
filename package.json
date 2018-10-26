@@ -24,6 +24,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.83.0",
     "subscriptions-transport-ws": "^0.9.15",
+    "uuid": "^3.3.2",
     "yup": "^0.26.6"
   },
   "scripts": {

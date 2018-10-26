@@ -51,6 +51,7 @@ export default class CommentContainer extends Component {
                {({ subscribeToMore, ...result }) => (
                   <CommentList
                      {...result}
+                     eventId={eventId}
                      subscribeToNewComment={() => {
                         subscribeToMore({
                            document: COMMENT_SUBSCRIPTION,
@@ -58,6 +59,16 @@ export default class CommentContainer extends Component {
                            updateQuery: (prev, { subscriptionData }) => {
                               if (!subscriptionData.data) return prev;
                               const newComment = subscriptionData.data.comment;
+                              let idExist = false;
+                              if (newComment.mutation === "CREATED") {
+                                 idExist =
+                                    prev.getComment.filter(
+                                       comment =>
+                                          comment.id === newComment.node.id
+                                    ).length > 0;
+                              }
+
+                              if (idExist) return;
                               if (newComment.mutation === "DELETED") {
                                  const id = newComment.previousValues.id;
                                  return {

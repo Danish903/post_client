@@ -5,14 +5,20 @@ export default class CommentList extends Component {
       this.props.subscribeToNewComment();
    }
    render() {
-      const { data, loading } = this.props;
+      const { data, loading, eventId } = this.props;
       if (loading) return <p>loading</p>;
       const { getComment: comments } = data;
       return (
          <div className="commentMessageContainer">
             {comments.map(comment => {
                if (!comment) return null;
-               return <CommentItem key={comment.id} comment={comment} />;
+               return (
+                  <CommentItem
+                     eventId={eventId}
+                     key={comment.id}
+                     comment={comment}
+                  />
+               );
             })}
          </div>
       );
