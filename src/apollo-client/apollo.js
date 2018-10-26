@@ -5,8 +5,8 @@ import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
 const getClient = (
-   httpURL = "http://localhost:8888",
-   websocketURL = "ws://localhost:8888"
+   httpURL = " https://insta-app-server.herokuapp.com",
+   websocketURL = "wss://insta-app-server.herokuapp.com"
 ) => {
    // Setup the authorization header for the http client
    const jwt = localStorage.getItem("token");
