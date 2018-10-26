@@ -40,7 +40,7 @@ const COMMENT_SUBSCRIPTION = gql`
 `;
 export default class CommentContainer extends Component {
    render() {
-      const { eventId } = this.props;
+      const { eventId, host } = this.props;
       return (
          <Comment.Group size="mini">
             <Header as="h3" dividing>
@@ -51,6 +51,7 @@ export default class CommentContainer extends Component {
                   <CommentList
                      {...result}
                      eventId={eventId}
+                     host={host}
                      subscribeToNewComment={() => {
                         subscribeToMore({
                            document: COMMENT_SUBSCRIPTION,

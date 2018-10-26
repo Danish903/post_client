@@ -70,7 +70,10 @@ class SubsComponent extends Component {
                            <LikeButton id={event.id} event={event} />
                         </Card.Content>
                      </Card>
-                     <CommentContainer eventId={!!event ? event.id : null} />
+                     <CommentContainer
+                        eventId={!!event ? event.id : null}
+                        host={event.host}
+                     />
                   </div>
                </Grid.Column>
             </Grid.Row>

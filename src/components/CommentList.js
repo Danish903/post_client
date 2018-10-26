@@ -5,7 +5,7 @@ export default class CommentList extends Component {
       this.props.subscribeToNewComment();
    }
    render() {
-      const { data, loading, eventId } = this.props;
+      const { data, loading, eventId, host } = this.props;
       if (loading) return <p>loading</p>;
       const { getComment: comments } = data;
       return (
@@ -17,6 +17,7 @@ export default class CommentList extends Component {
                      eventId={eventId}
                      key={comment.id}
                      comment={comment}
+                     host={host}
                   />
                );
             })}

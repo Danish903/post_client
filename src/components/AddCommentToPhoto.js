@@ -102,9 +102,10 @@ class AddCommentToPhoto extends React.PureComponent {
                               name="text"
                               value={this.state.text}
                               onChange={this._onChange}
+                              disabled={!me}
                            >
                               <input />
-                              <Button disabled={loading} type="submit">
+                              <Button disabled={loading || !me} type="submit">
                                  Send
                               </Button>
                            </Input>

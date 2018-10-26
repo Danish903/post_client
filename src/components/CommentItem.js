@@ -8,8 +8,8 @@ import EditComment from "./EditComment";
 import { COMMENT_QUERY } from "./CommentContainer";
 
 const DELETE_COMMENT_MUTATION = gql`
-   mutation($id: ID!) {
-      deleteComment(id: $id) {
+   mutation($id: ID!, $eventId: ID!) {
+      deleteComment(id: $id, eventId: $eventId) {
          id
       }
    }
@@ -36,40 +36,43 @@ export default class CommentItem extends Component {
       });
    };
    render() {
-      const { comment } = this.props;
+      const { comment, eventId, host } = this.props;
       const { user } = comment;
       const { isEditing } = this.state;
+      // console.log(host);
       return (
          <User>
-            {({ data: { me } }) => (
-               <Comment>
-                  <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg" />
-                  <Comment.Content>
-                     <Comment.Author as="a">
-                        {comment.user.username}
-                     </Comment.Author>
-                     <Comment.Metadata>
-                        <div>{moment(comment.createdAt).fromNow()}</div>
-                     </Comment.Metadata>
-                     <Comment.Text>
-                        {isEditing ? (
-                           <EditComment
-                              comment={comment}
-                              onCancel={this.handleEdit}
-                              key={comment.id}
-                              eventId={this.props.eventId}
-                              me={me}
-                           />
-                        ) : (
-                           <p>{comment.text}</p>
-                        )}
-                     </Comment.Text>
-                     {!isEditing &&
-                        me &&
-                        me.id === user.id && (
+            {({ data: { me } }) => {
+               const commentedUser = !isEditing && me && me.id === user.id;
+               const isOwner = me && me.id === host.id;
+               const canDelete = commentedUser || isOwner;
+               return (
+                  <Comment>
+                     <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg" />
+                     <Comment.Content>
+                        <Comment.Author as="a">
+                           {comment.user.username}
+                        </Comment.Author>
+                        <Comment.Metadata>
+                           <div>{moment(comment.createdAt).fromNow()}</div>
+                        </Comment.Metadata>
+                        <Comment.Text>
+                           {isEditing ? (
+                              <EditComment
+                                 comment={comment}
+                                 onCancel={this.handleEdit}
+                                 key={comment.id}
+                                 eventId={this.props.eventId}
+                                 me={me}
+                              />
+                           ) : (
+                              <p>{comment.text}</p>
+                           )}
+                        </Comment.Text>
+                        {canDelete && (
                            <Mutation
                               mutation={DELETE_COMMENT_MUTATION}
-                              variables={{ id: comment.id }}
+                              variables={{ id: comment.id, eventId }}
                               update={this._deleteUpdate}
                               optimisticResponse={{
                                  __typename: "Mutation",
@@ -87,16 +90,21 @@ export default class CommentItem extends Component {
                                     >
                                        Delete
                                     </Comment.Action>
-                                    <Comment.Action onClick={this.handleEdit}>
-                                       Edit
-                                    </Comment.Action>
+                                    {commentedUser && (
+                                       <Comment.Action
+                                          onClick={this.handleEdit}
+                                       >
+                                          Edit
+                                       </Comment.Action>
+                                    )}
                                  </Comment.Actions>
                               )}
                            </Mutation>
                         )}
-                  </Comment.Content>
-               </Comment>
-            )}
+                     </Comment.Content>
+                  </Comment>
+               );
+            }}
          </User>
       );
    }
