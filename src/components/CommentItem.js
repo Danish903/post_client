@@ -6,6 +6,7 @@ import moment from "moment";
 import User from "./User";
 import EditComment from "./EditComment";
 import { COMMENT_QUERY } from "./CommentContainer";
+import Loader from "./Loader";
 
 const DELETE_COMMENT_MUTATION = gql`
    mutation($id: ID!, $eventId: ID!) {
@@ -42,7 +43,8 @@ export default class CommentItem extends Component {
       // console.log(host);
       return (
          <User>
-            {({ data: { me } }) => {
+            {({ data: { me }, loading }) => {
+               if (loading) return <Loader />;
                const commentedUser = !isEditing && me && me.id === user.id;
                const isOwner = me && me.id === host.id;
                const canDelete = commentedUser || isOwner;
