@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import { Query } from "react-apollo";
 import { gql } from "apollo-boost";
 import { Container, Card, Image, Grid } from "semantic-ui-react";
+import moment from "moment";
 import LikeButton from "./LikeButton";
 import CommentContainer from "./CommentContainer";
+import Loader from "./Loader";
+import PageNotFound from "./PageNotFound";
 
 export const EVENT_QUERY = gql`
    query($id: ID!) {
@@ -26,7 +29,6 @@ export const EVENT_QUERY = gql`
 `;
 
 class SubsComponent extends Component {
-   componentDidMount() {}
    render() {
       const { event } = this.props;
 
@@ -56,7 +58,9 @@ class SubsComponent extends Component {
                               {!!event ? event.host.username : "test"}
                            </Card.Header>
                            <Card.Meta>
-                              {!!event ? event.createdAt : null}
+                              {!!event
+                                 ? moment(event.createdAt).format("LLLL")
+                                 : null}
                            </Card.Meta>
                            <Card.Description>
                               {!!event ? event.description : null}
@@ -71,37 +75,6 @@ class SubsComponent extends Component {
                </Grid.Column>
             </Grid.Row>
          </Grid>
-         // <div className="photoDetailContainer">
-         //    <div style={{ flexGrow: 2 }}>
-         //       <img
-         //          src={!!event ? event.imageURL : null}
-         //          alt="df"
-         //          style={{ width: "500px", height: "570px" }}
-         //       />
-         //    </div>
-         //    <div className="commentContainer">
-         //       <Card fluid>
-         //          <Card.Content>
-         //             <Image
-         //                floated="right"
-         //                size="mini"
-         //                src="https://react.semantic-ui.com/images/avatar/small/joe.jpg"
-         //             />
-         //             <Card.Header>
-         //                {!!event ? event.host.username : "test"}
-         //             </Card.Header>
-         //             <Card.Meta>{!!event ? event.createdAt : null}</Card.Meta>
-         //             <Card.Description>
-         //                {!!event ? event.description : null}
-         //             </Card.Description>
-         //          </Card.Content>
-         //          <Card.Content extra>
-         //             <LikeButton id={event.id} event={event} />
-         //          </Card.Content>
-         //       </Card>
-         //       <CommentContainer eventId={!!event ? event.id : null} />
-         //    </div>
-         // </div>
       );
    }
 }
@@ -112,8 +85,9 @@ export default class PhotoDetails extends Component {
       return (
          <Container>
             <Query query={EVENT_QUERY} variables={{ id }}>
-               {({ data, loading }) => {
-                  if (loading) return null;
+               {({ data, loading, error }) => {
+                  if (loading) return <Loader />;
+                  if (error) return <PageNotFound />;
                   return <SubsComponent event={!!data ? data.event : null} />;
                }}
             </Query>
