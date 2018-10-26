@@ -1,0 +1,63 @@
+body {
+   margin: 0;
+   padding: 0;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+      "Helvetica Neue", sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
+}
+
+div.ui.grid {
+   display: flex;
+   justify-content: center;
+   margin-top: 30px;
+}
+
+.imageContainer * {
+   position: relative;
+   cursor: pointer;
+   transition: all 0.3s ease-in-out;
+}
+.imageContainer:hover img {
+   opacity: 0.3;
+   filter: grayscale(100);
+}
+.imageAction {
+   position: absolute;
+   z-index: 1000;
+}
+.imageContainer .imageAction {
+   transform: translate(50%, -600%) scale(0);
+}
+.imageContainer:hover .imageAction {
+   transform: translate(50%, -600%) scale(1);
+}
+
+.photoDetailContainer {
+   display: flex;
+   justify-content: space-between;
+   overflow: none;
+   position: relative;
+   margin-top: 100px;
+   min-height: 0;
+}
+.commentContainer {
+   overflow: none;
+   position: relative;
+   margin-right: 40px;
+   margin-left: 20px;
+   width: 90%;
+}
+
+.commentMessageContainer {
+   height: 40vh;
+   overflow: auto;
+   display: flex;
+   flex-direction: column-reverse;
+}
