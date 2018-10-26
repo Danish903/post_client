@@ -4,6 +4,7 @@ import { gql } from "apollo-boost";
 import { Comment } from "semantic-ui-react";
 import moment from "moment";
 import User from "./User";
+import EditComment from "./EditComment";
 import { COMMENT_QUERY } from "./CommentContainer";
 
 const DELETE_COMMENT_MUTATION = gql`
@@ -14,6 +15,11 @@ const DELETE_COMMENT_MUTATION = gql`
    }
 `;
 export default class CommentItem extends Component {
+   state = { isEditing: false };
+
+   handleEdit = () => {
+      this.setState(prev => ({ isEditing: !prev.isEditing }));
+   };
    _deleteUpdate = (cache, { data: { deleteComment } }) => {
       const { eventId } = this.props;
       const data = cache.readQuery({
@@ -32,6 +38,7 @@ export default class CommentItem extends Component {
    render() {
       const { comment } = this.props;
       const { user } = comment;
+      const { isEditing } = this.state;
       return (
          <User>
             {({ data: { me } }) => (
@@ -45,9 +52,20 @@ export default class CommentItem extends Component {
                         <div>{moment(comment.createdAt).fromNow()}</div>
                      </Comment.Metadata>
                      <Comment.Text>
-                        <p>{comment.text}</p>
+                        {isEditing ? (
+                           <EditComment
+                              comment={comment}
+                              onCancel={this.handleEdit}
+                              key={comment.id}
+                              eventId={this.props.eventId}
+                              me={me}
+                           />
+                        ) : (
+                           <p>{comment.text}</p>
+                        )}
                      </Comment.Text>
-                     {me &&
+                     {!isEditing &&
+                        me &&
                         me.id === user.id && (
                            <Mutation
                               mutation={DELETE_COMMENT_MUTATION}
@@ -62,13 +80,16 @@ export default class CommentItem extends Component {
                               }}
                            >
                               {deleteComment => (
-                                 <Comment.Actions onClick={deleteComment}>
+                                 <Comment.Actions>
                                     <Comment.Action
                                        style={{ color: "#BB2B2D" }}
+                                       onClick={deleteComment}
                                     >
                                        Delete
                                     </Comment.Action>
-                                    <Comment.Action>Edit</Comment.Action>
+                                    <Comment.Action onClick={this.handleEdit}>
+                                       Edit
+                                    </Comment.Action>
                                  </Comment.Actions>
                               )}
                            </Mutation>
