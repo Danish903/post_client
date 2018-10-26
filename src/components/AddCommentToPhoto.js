@@ -88,7 +88,7 @@ class AddCommentToPhoto extends React.PureComponent {
                   }}
                   update={this._update}
                >
-                  {createComment => {
+                  {(createComment, { loading }) => {
                      return (
                         <Form
                            reply
@@ -104,7 +104,9 @@ class AddCommentToPhoto extends React.PureComponent {
                               onChange={this._onChange}
                            >
                               <input />
-                              <Button type="submit">Send</Button>
+                              <Button disabled={loading} type="submit">
+                                 Send
+                              </Button>
                            </Input>
                         </Form>
                      );
