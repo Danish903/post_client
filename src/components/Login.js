@@ -102,7 +102,6 @@ export default compose(
                query: ME_QUERY
             });
             resetForm();
-            // props.history.push("/");
          } catch (error) {
             setErrors(error);
          }
