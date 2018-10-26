@@ -38,7 +38,6 @@ class Nav extends Component {
                                  basic
                                  color="teal"
                                  content="Create a post"
-                                 onClick={() => this.handleLogout(client)}
                               />
                            </Menu.Item>
                            <Menu.Item>
