@@ -3,6 +3,7 @@ import { Button, Menu } from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import User from "./User";
+import { toast } from "react-semantic-toasts/build/toast";
 
 class Nav extends Component {
    state = { activeItem: "home" };
@@ -16,6 +17,12 @@ class Nav extends Component {
    handleLogout = client => {
       localStorage.clear();
       client.resetStore();
+
+      toast({
+         description: `You've been successfully logged out!`,
+         icon: "warning sign",
+         type: "success"
+      });
    };
    render() {
       const { activeItem } = this.state;
@@ -42,8 +49,6 @@ class Nav extends Component {
                            </Menu.Item>
                            <Menu.Item>
                               <Button
-                                 as={Link}
-                                 to="/"
                                  basic
                                  color="red"
                                  content="Logout"
