@@ -186,6 +186,7 @@ class LikeCount extends Component {
                               as="div"
                               labelPosition="right"
                               disabled={!authenticated}
+                              size="mini"
                               onClick={() =>
                                  this.handleLike(
                                     likePhoto,
@@ -196,6 +197,7 @@ class LikeCount extends Component {
                            >
                               <Button
                                  content={isLiked ? "Liked" : "Like"}
+                                 size="mini"
                                  color={isLiked ? "red" : null}
                                  icon="heart"
                                  label={{

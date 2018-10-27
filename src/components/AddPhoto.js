@@ -17,6 +17,7 @@ const CREATE_EVENT_MUTATION = gql`
       $imageURL: String!
       $description: String!
       $published: Boolean!
+      $disableComment: Boolean!
    ) {
       createEvent(
          data: {
@@ -24,6 +25,7 @@ const CREATE_EVENT_MUTATION = gql`
             imageURL: $imageURL
             description: $description
             published: $published
+            disableComment: $disableComment
          }
       ) {
          id
@@ -51,23 +53,30 @@ class AddPhoto extends React.Component {
       title: "",
       imageURL: "",
       description: "",
-      published: true
+      isPublished: false,
+      published: true,
+      disableComment: false
    };
-   _onChange = e => {
-      const { name, value } = e.target;
-      if (name) {
+   _onChange = (e, data) => {
+      const { name, value, checked } = data;
+      if (name === "published") {
          this.setState({
-            [name]: value
+            published: !checked,
+            isPublished: checked
          });
-      } else {
-         this.setState(prev => ({ published: !prev.published }));
+      } else if (!!value) {
+         this.setState({
+            [name]: value ? value : checked
+         });
       }
    };
    _onSubmit = async createEvent => {
+      const data = { ...this.state };
+      delete data.isPublished;
       try {
          await createEvent({
             variables: {
-               ...this.state
+               ...data
             }
          });
          this.props.history.push("/");
@@ -75,11 +84,12 @@ class AddPhoto extends React.Component {
          console.log(error);
       }
    };
-   _update = (cache, payload) => {
+   _update = (cache, { data: { createEvent } }) => {
       const data = cache.readQuery({ query: GET_EVENTS_QUERY });
-
-      data.events = [payload.data.createEvent, ...data.events];
-      cache.writeQuery({ query: GET_EVENTS_QUERY, data });
+      if (createEvent.published) {
+         data.events = [createEvent, ...data.events];
+         cache.writeQuery({ query: GET_EVENTS_QUERY, data });
+      }
    };
    render() {
       return (
@@ -129,17 +139,27 @@ class AddPhoto extends React.Component {
                               required
                            />
                         </Form.Field>
-
+                        <Form.Field>
+                           <Checkbox
+                              type="checkbox"
+                              label="Disable comments for your post"
+                              toggle
+                              name="disableComment"
+                              checked={this.state.disableComment}
+                              onChange={this._onChange}
+                           />
+                        </Form.Field>
                         <Form.Field>
                            <Checkbox
                               type="checkbox"
                               label="Make your post private"
                               toggle
                               name="published"
-                              checked={!this.state.published}
+                              checked={this.state.isPublished}
                               onChange={this._onChange}
                            />
                         </Form.Field>
+
                         <Button
                            basic
                            color="black"

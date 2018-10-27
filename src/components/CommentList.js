@@ -11,7 +11,6 @@ export default class CommentList extends Component {
       return (
          <div className="commentMessageContainer">
             {comments.map(comment => {
-               if (!comment) return null;
                return (
                   <CommentItem
                      eventId={eventId}
