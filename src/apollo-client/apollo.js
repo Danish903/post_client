@@ -7,8 +7,8 @@ import { setContext } from "apollo-link-context";
 
 //process.env.REACT_APP_SERVER_URL
 const getClient = (
-   httpURL = "https://insta-app-server.herokuapp.com",
-   websocketURL = "wss://insta-app-server.herokuapp.com"
+   httpURL = process.env.REACT_APP_SERVER_URL,
+   websocketURL = process.env.REACT_APP_WS_URL
 ) => {
    // Setup the authorization header for the http client
    const jwt = localStorage.getItem("token");
