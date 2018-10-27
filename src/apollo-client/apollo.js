@@ -4,8 +4,10 @@ import { getMainDefinition } from "apollo-utilities";
 import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
+
+//process.env.REACT_APP_SERVER_URL
 const getClient = (
-   httpURL = " https://insta-app-server.herokuapp.com",
+   httpURL = "https://insta-app-server.herokuapp.com",
    websocketURL = "wss://insta-app-server.herokuapp.com"
 ) => {
    // Setup the authorization header for the http client

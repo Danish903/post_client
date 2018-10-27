@@ -17,7 +17,6 @@ class Nav extends Component {
    handleLogout = client => {
       localStorage.clear();
       client.resetStore();
-
       toast({
          description: `You've been successfully logged out!`,
          icon: "warning sign",
