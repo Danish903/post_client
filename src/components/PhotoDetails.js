@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Query } from "react-apollo";
+import { Query, Subscription } from "react-apollo";
 import { gql } from "apollo-boost";
-import { Container, Card, Image, Grid } from "semantic-ui-react";
+import { Container, Card, Image, Grid, Header } from "semantic-ui-react";
 import moment from "moment";
 import LikeButton from "./LikeButton";
 import CommentContainer from "./CommentContainer";
 import Loader from "./Loader";
 import PageNotFound from "./PageNotFound";
+import DisableComment from "./DisableComment";
 
 export const EVENT_QUERY = gql`
    query($id: ID!) {
@@ -16,6 +17,7 @@ export const EVENT_QUERY = gql`
          description
          published
          imageURL
+         disableComment
          likes {
             id
          }
@@ -23,6 +25,19 @@ export const EVENT_QUERY = gql`
          host {
             id
             username
+         }
+      }
+   }
+`;
+
+export const SINGLE_EVENT_SUBSCRIPTION = gql`
+   subscription($id: ID!) {
+      singleEvent(id: $id) {
+         mutation
+         node {
+            id
+            title
+            disableComment
          }
       }
    }
@@ -67,13 +82,28 @@ class SubsComponent extends Component {
                            </Card.Description>
                         </Card.Content>
                         <Card.Content extra>
-                           <LikeButton id={event.id} event={event} />
+                           <div
+                              style={{
+                                 backround: "red",
+                                 display: "flex",
+                                 justifyContent: "space-between"
+                              }}
+                           >
+                              <LikeButton id={event.id} event={event} />
+                              <DisableComment event={event} />
+                           </div>
                         </Card.Content>
                      </Card>
-                     <CommentContainer
-                        eventId={!!event ? event.id : null}
-                        host={event.host}
-                     />
+                     {event.disableComment ? (
+                        <Header as="h4">
+                           Comments are disabled for this post
+                        </Header>
+                     ) : (
+                        <CommentContainer
+                           eventId={!!event ? event.id : null}
+                           host={event.host}
+                        />
+                     )}
                   </div>
                </Grid.Column>
             </Grid.Row>
@@ -91,7 +121,17 @@ export default class PhotoDetails extends Component {
                {({ data, loading, error }) => {
                   if (loading) return <Loader />;
                   if (error) return <PageNotFound />;
-                  return <SubsComponent event={!!data ? data.event : null} />;
+
+                  return (
+                     <Subscription
+                        subscription={SINGLE_EVENT_SUBSCRIPTION}
+                        variables={{ id: data.event.id }}
+                     >
+                        {() => (
+                           <SubsComponent event={!!data ? data.event : null} />
+                        )}
+                     </Subscription>
+                  );
                }}
             </Query>
          </Container>
