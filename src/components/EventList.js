@@ -4,8 +4,9 @@ import EventListItem from "./EventListItem";
 
 export default class EventList extends Component {
    componentDidMount() {
-      this.props.subscribeToNewEvent();
+      this.querySubscription = this.props.subscribeToNewEvent();
    }
+
    render() {
       const { data, loading, error } = this.props;
       if (loading) return <p>Loading...</p>;

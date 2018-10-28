@@ -1,7 +1,7 @@
 import React from "react";
 import { compose, graphql } from "react-apollo";
 import { gql } from "apollo-boost";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import {
    Button,
    Container,
@@ -26,7 +26,14 @@ const SIGN_UP_MUTATION = gql`
    }
 `;
 const Signup = props => {
-   const { errors, handleSubmit, isSubmitting } = props;
+   const {
+      errors,
+      handleSubmit,
+      isSubmitting,
+      data: { me }
+   } = props;
+
+   if (me) return <Redirect to="/" />;
    return (
       <Container fluid={false} text>
          {errors && errors.message ? (

@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import User from "../components/User";
 import Loader from "../components/Loader";
+
 const PrivateRoute = ({ component: Component, ...rest }) => {
    return (
       <User>

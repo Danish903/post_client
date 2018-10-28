@@ -1,7 +1,7 @@
 import React from "react";
 import { compose, graphql } from "react-apollo";
 import { gql } from "apollo-boost";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import {
    Button,
    Container,
@@ -14,6 +14,7 @@ import { withFormik, Field } from "formik";
 import { validateLoginSchema } from "../utils/formValidationSchema";
 import CustomInputComponet from "./CustomInputComponent";
 import { ME_QUERY } from "./User";
+import Loader from "./Loader";
 
 const LOGIN_MUTATION = gql`
    mutation($email: String!, $password: String!) {
@@ -26,7 +27,14 @@ const LOGIN_MUTATION = gql`
 const _onSubmit = handleSubmit => {
    handleSubmit();
 };
-const Login = ({ errors, handleSubmit, isSubmitting }) => {
+const Login = ({
+   errors,
+   handleSubmit,
+   isSubmitting,
+   data: { me, loading }
+}) => {
+   if (loading) return <Loader />;
+   if (me) return <Redirect to="/" />;
    return (
       <Container fluid={false} text>
          {errors && errors.message ? (
@@ -98,9 +106,11 @@ export default compose(
             });
 
             localStorage.setItem("token", res.data.login.token);
+            setSubmitting(false);
             await props.data.refetch({
                query: ME_QUERY
             });
+
             resetForm();
          } catch (error) {
             setErrors(error);
