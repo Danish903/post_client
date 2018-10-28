@@ -8,8 +8,10 @@ import {
    Message,
    Container,
    TextArea,
-   Checkbox
+   Checkbox,
+   Header
 } from "semantic-ui-react";
+import { toast } from "react-semantic-toasts/build/toast";
 
 const CREATE_EVENT_MUTATION = gql`
    mutation(
@@ -55,24 +57,86 @@ class AddPhoto extends React.Component {
       description: "",
       isPublished: false,
       published: true,
-      disableComment: false
+      disableComment: false,
+      image: "",
+      loading: false,
+      imageUploaded: false
    };
+
    _onChange = (e, data) => {
       const { name, value, checked } = data;
+
       if (name === "published") {
          this.setState({
             published: !checked,
             isPublished: checked
          });
-      } else if (!!value) {
+      } else if (!value) {
+         this.setState({
+            [name]: value ? value : checked
+         });
+      } else {
          this.setState({
             [name]: value ? value : checked
          });
       }
    };
+
+   imageUploading = () => {
+      toast({
+         description: `Image uploading...`,
+         icon: "warning sign",
+         type: "success"
+      });
+   };
+   imageUploadedSuccessfully = () => {
+      toast({
+         description: `Image uploaded Successfully!`,
+         icon: "warning sign",
+         type: "success"
+      });
+   };
+   uploadImage = async e => {
+      const { files } = e.target;
+
+      const data = new FormData();
+      data.append("file", files[0]);
+      data.append("upload_preset", "photoups");
+      this.setState({ loading: true });
+      this.imageUploading();
+      try {
+         const res = await fetch(
+            "https://api.cloudinary.com/v1_1/dluo0wvst/image/upload",
+            {
+               method: "POST",
+               body: data
+            }
+         );
+         const file = await res.json();
+         this.setState({
+            imageURL: file.secure_url,
+            imageUploaded: true
+         });
+         this.imageUploadedSuccessfully();
+      } catch (error) {
+         this.setState({
+            imageUploaded: false
+         });
+      }
+
+      this.setState({ loading: false });
+   };
    _onSubmit = async createEvent => {
       const data = { ...this.state };
       delete data.isPublished;
+      if (data.imageURL.length === 0) {
+         toast({
+            description: `Upload a image`,
+            icon: "warning sign",
+            type: "error"
+         });
+         return;
+      }
       try {
          await createEvent({
             variables: {
@@ -84,16 +148,13 @@ class AddPhoto extends React.Component {
          console.log(error);
       }
    };
-   _update = (cache, { data: { createEvent } }) => {
-      const data = cache.readQuery({ query: GET_EVENTS_QUERY });
-      if (createEvent.published) {
-         data.events = [createEvent, ...data.events];
-         cache.writeQuery({ query: GET_EVENTS_QUERY, data });
-      }
-   };
+
    render() {
       return (
-         <Mutation mutation={CREATE_EVENT_MUTATION} update={this._update}>
+         <Mutation
+            mutation={CREATE_EVENT_MUTATION}
+            refetchQueries={[{ query: GET_EVENTS_QUERY }]}
+         >
             {(createEvent, { data, loading, error }) => {
                if (error) return <p>{error.message}</p>;
                return (
@@ -107,6 +168,27 @@ class AddPhoto extends React.Component {
                         className="attached fluid segment"
                         onSubmit={() => this._onSubmit(createEvent)}
                      >
+                        {this.state.imageUploaded ? (
+                           <Header as="h4" color="grey">
+                              Image uploaded
+                           </Header>
+                        ) : (
+                           <Form.Input
+                              fluid
+                              label={
+                                 this.state.loading
+                                    ? "Image uploading...wait until image is uploaded"
+                                    : "Upload a Image"
+                              }
+                              type="file"
+                              name="file"
+                              value={this.state.image}
+                              onChange={this.uploadImage}
+                              loading={this.state.loading}
+                              disabled={this.state.loading}
+                              required
+                           />
+                        )}
                         <Form.Field>
                            <Form.Input
                               fluid
@@ -116,27 +198,28 @@ class AddPhoto extends React.Component {
                               name="title"
                               value={this.state.title}
                               onChange={this._onChange}
+                              disabled={this.state.loading}
                               required
                            />
                         </Form.Field>
-                        <Form.Input
-                           fluid
-                           label="Upload photo"
-                           placeholder="upload a photo"
-                           type="text"
-                           name="imageURL"
-                           value={this.state.imageURL}
-                           onChange={this._onChange}
-                           required
-                        />
+
                         <Form.Field>
-                           <label>Description</label>
+                           <label
+                              style={
+                                 this.state.loading
+                                    ? { color: "rgba(0,0,0,.25)" }
+                                    : null
+                              }
+                           >
+                              Description
+                           </label>
                            <TextArea
                               placeholder="Tell us more"
                               autoHeight
                               name="description"
                               onChange={this._onChange}
                               required
+                              disabled={this.state.loading}
                            />
                         </Form.Field>
                         <Form.Field>
@@ -147,6 +230,7 @@ class AddPhoto extends React.Component {
                               name="disableComment"
                               checked={this.state.disableComment}
                               onChange={this._onChange}
+                              disabled={this.state.loading}
                            />
                         </Form.Field>
                         <Form.Field>
@@ -157,6 +241,7 @@ class AddPhoto extends React.Component {
                               name="published"
                               checked={this.state.isPublished}
                               onChange={this._onChange}
+                              disabled={this.state.loading}
                            />
                         </Form.Field>
 

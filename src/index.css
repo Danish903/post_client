@@ -33,10 +33,10 @@ div.ui.grid {
    z-index: 1000;
 }
 .imageContainer .imageAction {
-   transform: translate(50%, -600%) scale(0);
+   transform: translate(90%, -600%) scale(0);
 }
 .imageContainer:hover .imageAction {
-   transform: translate(50%, -600%) scale(1);
+   transform: translate(90%, -600%) scale(1);
 }
 
 .photoDetailContainer {

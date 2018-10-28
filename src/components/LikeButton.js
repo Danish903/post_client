@@ -110,25 +110,11 @@ class LikeCount extends Component {
       if (isLiked) {
          try {
             await unLikePhoto();
-         } catch (error) {
-            toast({
-               title: "Error",
-               description: `${error.message}`,
-               icon: "warning sign",
-               type: "error"
-            });
-         }
+         } catch (error) {}
       } else {
          try {
             await likePhoto();
-         } catch (error) {
-            toast({
-               title: "Error",
-               description: `${error.message}`,
-               icon: "warning sign",
-               type: "error"
-            });
-         }
+         } catch (error) {}
       }
    }, 200);
    render() {
