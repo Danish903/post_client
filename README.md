@@ -21,7 +21,7 @@
 -  **Post Owner**: Can disable comments and make their post priavate
 -  **Signup/Login From**:
 
-   -  [`Formik'](https://jaredpalmer.com/formik) and ['Yup'](https://github.com/jquense/yup) is used to validate user's input
+   -  [`Formik`](https://jaredpalmer.com/formik) and [`yup`](https://github.com/jquense/yup) is used to validate user's input
 
 ## Made with..
 
