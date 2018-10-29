@@ -37,6 +37,7 @@ npm i
 
 4. In `web` create a file called `.env` and add the following line inside: `REACT_APP_SERVER_URL=https://insta-app-server.herokuapp.com` and
    `REACT_APP_WS_URL=wss://insta-app-server.herokuapp.com`
+
 5. Start app
 
 ```
