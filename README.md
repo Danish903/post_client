@@ -37,3 +37,7 @@ Backend:
 -  Server GraphQL: GraphQL yoga https://github.com/prismagraphql/graphql-yoga
 -  ORM (object-relational mapping): Prisma https://www.prisma.io/
 -  Database Postgresql: https://www.postgresql.org/
+
+## App graphql api source
+
+[Server Code](https://github.com/Danish903/post_server)
