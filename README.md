@@ -15,6 +15,34 @@
 
 As the Demo Server is hosted on a free Heroku account, the servers its hosted on enter `sleep mode` when not in use. If you notice a delay, please allow a few seconds for the servers to wake and try refreshing a browser.
 
+## Installation
+
+1. Clone project
+
+```
+git clone git@github.com:Danish903/post_client.git
+```
+
+2. cd into post_client
+
+```
+cd web
+```
+
+3. Download dependencies
+
+```
+npm i
+```
+
+4. In `web` create a file called `.env` and add the following line inside: `REACT_APP_SERVER_URL=https://insta-app-server.herokuapp.com` and
+   `REACT_APP_WS_URL=wss://insta-app-server.herokuapp.com`
+5. Start app
+
+```
+npm start
+```
+
 ## Features
 
 -  Web login/Signup
