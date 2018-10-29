@@ -13,19 +13,16 @@
 
 ### [Online Demo](https://photoups.netlify.com/)
 
-As the Demo Servers is hosted on a free Heroku account, the servers its hosted on enter ‘sleep mode’ when not in use. If you notice a delay, please allow a few seconds for the servers to wake and try refreshing a browser.
+As the Demo Server is hosted on a free Heroku account, the servers its hosted on enter `sleep mode` when not in use. If you notice a delay, please allow a few seconds for the servers to wake and try refreshing a browser.
 
 ## Features
 
--  **Scalable GraphQL server:** The server uses [`graphql-yoga`](https://github.com/prisma/graphql-yoga) which is based on Apollo Server & Express
--  **Apollo Client:** Apollo is used to query grphqlsever
--  **GraphQL database:** Includes GraphQL database binding to [Prisma] https://www.postgresql.org/ (running on PostgreSql)
--  **Post**: User can post their beautiful image
--  **Comments/Likes**: Made with Prisma & apollo subscription. (WebSocket)
--  **Post Owner**: Can disable comments and make their post priavate
--  **Signup/Login From**:
-
-   -  [`Formik`](https://jaredpalmer.com/formik) and [`yup`](https://github.com/jquense/yup) is used to validate user's input
+-  Web login/Signup
+-  User can post their beautiful pictures
+-  User can like/comments in real time on their or other user's post
+-  User can make their post private and can disable comments for their post
+-  Post owner can delete other user's comments
+-  Infinite scroller on fetchings pictures and comments
 
 ## Made with..
 
