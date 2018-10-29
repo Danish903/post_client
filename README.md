@@ -11,6 +11,10 @@
 
 <div align="center"><strong>🚀 fullstack GraphQL app</strong></div>
 
+### [Online Demo](https://photoups.netlify.com/)
+
+As the Demo Servers is hosted on a free Heroku account, the servers its hosted on enter ‘sleep mode’ when not in use. If you notice a delay, please allow a few seconds for the servers to wake and try refreshing a browser.
+
 ## Features
 
 -  **Scalable GraphQL server:** The server uses [`graphql-yoga`](https://github.com/prisma/graphql-yoga) which is based on Apollo Server & Express
