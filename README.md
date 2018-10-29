@@ -11,6 +11,18 @@
 
 <div align="center"><strong>🚀 fullstack GraphQL app</strong></div>
 
+## Features
+
+-  **Scalable GraphQL server:** The server uses [`graphql-yoga`](https://github.com/prisma/graphql-yoga) which is based on Apollo Server & Express
+-  **Apollo Client:** Apollo is used to query grphqlsever
+-  **GraphQL database:** Includes GraphQL database binding to [Prisma] https://www.postgresql.org/ (running on PostgreSql)
+-  **Post**: User can post their beautiful image
+-  **Comments/Likes**: Made with Prisma & apollo subscription. (WebSocket)
+-  **Post Owner**: Can disable comments and make their post priavate
+-  **Signup/Login From**:
+
+   -  [`Formik'](https://jaredpalmer.com/formik) and ['Yup'](https://github.com/jquense/yup) is used to validate user's input
+
 ## Made with..
 
 Frontend:
