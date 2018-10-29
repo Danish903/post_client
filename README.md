@@ -10,3 +10,17 @@
 ![image](https://user-images.githubusercontent.com/15246526/38530809-7a9cc69e-3c21-11e8-8eb9-6f143eb7d64d.png)
 
 <div align="center"><strong>🚀 fullstack GraphQL app</strong></div>
+
+## Made with..
+
+Frontend:
+
+-  User interfaces: React https://reactjs.org/
+-  Design: semantic-ui-react https://react.semantic-ui.com/
+-  GraphQL tool: Apollo Client https://www.apollographql.com/
+
+Backend:
+
+-  Server GraphQL: GraphQL yoga https://github.com/prismagraphql/graphql-yoga
+-  ORM (object-relational mapping): Prisma https://www.prisma.io/
+-  Database Postgresql: https://www.postgresql.org/
