@@ -104,8 +104,15 @@ class AddCommentToPhoto extends React.PureComponent {
                               onChange={this._onChange}
                               disabled={!me}
                            >
-                              <input />
-                              <Button disabled={loading || !me} type="submit">
+                              <input
+                                 style={!me ? null : { borderColor: "#767676" }}
+                              />
+                              <Button
+                                 basic
+                                 color="grey"
+                                 disabled={loading || !me}
+                                 type="submit"
+                              >
                                  Send
                               </Button>
                            </Input>

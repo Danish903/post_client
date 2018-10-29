@@ -61,3 +61,12 @@ div.ui.grid {
    display: flex;
    flex-direction: column-reverse;
 }
+.ui .fluid .action .input > input {
+   border-color: #767676 !important;
+}
+
+h1 {
+   font-size: 18px !important;
+   font-weight: 300 !important;
+   font-family: "Pacifico", cursive !important;
+}

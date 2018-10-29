@@ -31,10 +31,18 @@ class Nav extends Component {
                return (
                   <Menu size="tiny">
                      <Menu.Item
+                        as={Link}
+                        to="/"
                         name="home"
                         active={activeItem === "home"}
                         onClick={this.handleItemClick}
-                     />
+                     >
+                        <img src="/logo.png" alt="logo" />
+                        <Menu.Item>
+                           <h1>Photo up</h1>
+                        </Menu.Item>
+                     </Menu.Item>
+
                      {me && (
                         <Menu.Menu position="right">
                            <Menu.Item>
@@ -42,14 +50,14 @@ class Nav extends Component {
                                  as={Link}
                                  to="/createEvent"
                                  basic
-                                 color="teal"
+                                 color="black"
                                  content="Create a post"
                               />
                            </Menu.Item>
                            <Menu.Item>
                               <Button
                                  basic
-                                 color="red"
+                                 color="orange"
                                  content="Logout"
                                  onClick={() => this.handleLogout(client)}
                               />

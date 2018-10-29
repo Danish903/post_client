@@ -4,8 +4,8 @@ import { gql } from "apollo-boost";
 import EventList from "./EventList";
 
 export const GET_EVENTS_QUERY = gql`
-   query {
-      events(orderBy: createdAt_DESC) {
+   query($after: String) {
+      events(orderBy: createdAt_DESC, first: 10, after: $after) {
          id
          title
          description
