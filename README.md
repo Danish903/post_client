@@ -51,7 +51,7 @@ npm start
 -  User can like/comments in real time on their or other user's post
 -  User can make their post private and can disable comments for their post
 -  Post owner can delete other user's comments
--  Infinite scroller on fetchings pictures and comments
+-  Pagination: Infinite scroller is used for paginating pictures and comments
 
 ## Made with..
 
