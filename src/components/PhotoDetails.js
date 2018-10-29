@@ -48,7 +48,7 @@ class SubsComponent extends Component {
       const { event } = this.props;
 
       return (
-         <Grid celled="internally" divided="vertically">
+         <Grid celled="internally" stackable>
             <Grid.Row columns={2}>
                <Grid.Column
                   style={{

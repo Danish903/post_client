@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import EventDashboard from "../components/EventDashboard";
 import Signup from "../components/Signup";
@@ -10,10 +10,11 @@ import PageNotFound from "../components/PageNotFound";
 import { SemanticToastContainer } from "react-semantic-toasts";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import ScrollToTop from "../components/ScrollToTop";
 
 const Routes = () => (
    <Router>
-      <Fragment>
+      <ScrollToTop>
          <Nav />
          <SemanticToastContainer />
          <Switch>
@@ -24,7 +25,7 @@ const Routes = () => (
             <Route path="/photoDetails/:id" component={PhotoDetails} />
             <Route component={PageNotFound} />
          </Switch>
-      </Fragment>
+      </ScrollToTop>
    </Router>
 );
 
