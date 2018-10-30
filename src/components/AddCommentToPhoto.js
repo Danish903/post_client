@@ -97,7 +97,11 @@ class AddCommentToPhoto extends React.PureComponent {
                            <Input
                               fluid
                               type="text"
-                              placeholder="Add comment..."
+                              placeholder={
+                                 !me
+                                    ? "You need to signup/login to add comments"
+                                    : "Add comment..."
+                              }
                               action
                               name="text"
                               value={this.state.text}
