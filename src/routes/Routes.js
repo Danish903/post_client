@@ -21,7 +21,7 @@ const Routes = () => (
             <Route exact path="/" component={EventDashboard} />
             <PublicRoute exact path="/signup" component={Signup} />
             <PublicRoute path="/login" component={Login} />
-            <PrivateRoute path="/createevent" component={AddPhoto} />
+            <PrivateRoute path="/uploadImage" component={AddPhoto} />
             <Route path="/photoDetails/:id" component={PhotoDetails} />
             <Route component={PageNotFound} />
          </Switch>

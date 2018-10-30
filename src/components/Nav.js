@@ -48,7 +48,7 @@ class Nav extends Component {
                            <Menu.Item>
                               <Button
                                  as={Link}
-                                 to="/createEvent"
+                                 to="/uploadImage"
                                  basic
                                  color="black"
                                  content="Create a post"
