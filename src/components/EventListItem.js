@@ -24,7 +24,7 @@ export default class EventListItem extends PureComponent {
                         <Icon name="heart" />
                      </Button>
                      <Label basic pointing="left">
-                        {event.likesCount}
+                        {event.likes.length}
                      </Label>
                   </Button>
                   <Button as="div" labelPosition="right">

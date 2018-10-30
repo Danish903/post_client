@@ -45,6 +45,7 @@ export default class CommentList extends Component {
       const { data, loading, eventId, host } = this.props;
       if (loading) return <p>loading...</p>;
       const { getComment: comments } = data;
+
       return (
          <div
             className="commentMessageContainer"

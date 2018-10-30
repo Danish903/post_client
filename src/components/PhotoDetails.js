@@ -76,7 +76,7 @@ class SubsComponent extends Component {
                                  : null}
                            </Card.Meta>
                            <Card.Description>
-                              {!!event ? event.description : null}
+                              {!!event ? event.title : null}
                            </Card.Description>
                         </Card.Content>
                         <Card.Content extra>
