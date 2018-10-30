@@ -5,7 +5,7 @@ import { Button } from "semantic-ui-react";
 import { toast } from "react-semantic-toasts";
 import debounce from "lodash.debounce";
 import { ME_QUERY } from "./User";
-
+import { GET_EVENTS_QUERY } from "./EventDashboard";
 import _ from "lodash";
 import User from "./User";
 
@@ -142,6 +142,7 @@ class LikeCount extends Component {
                }
             }}
             // refetchQueries={[{ query: ME_QUERY }]}
+            refetchQueries={[{ query: ME_QUERY }, { query: GET_EVENTS_QUERY }]}
             update={this.likePhotoUpdate}
          >
             {likePhoto => {
@@ -159,7 +160,10 @@ class LikeCount extends Component {
                            id: !!exist ? exist.id : -123232
                         }
                      }}
-                     refetchQueries={[{ query: ME_QUERY }]}
+                     refetchQueries={[
+                        { query: ME_QUERY },
+                        { query: GET_EVENTS_QUERY }
+                     ]}
                      update={this.disLikePhotoUpdate}
                   >
                      {(unLikePhoto, { error }) => {
