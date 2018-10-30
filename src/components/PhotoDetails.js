@@ -64,11 +64,9 @@ class SubsComponent extends Component {
                   <div className="commentContainer">
                      <Card fluid>
                         <Card.Content>
-                           <Image
-                              floated="right"
-                              size="mini"
-                              src="https://react.semantic-ui.com/images/avatar/small/joe.jpg"
-                           />
+                           <div className="avatar">
+                              <p>{!!event ? event.host.username[0] : "NA"}</p>
+                           </div>
                            <Card.Header>
                               {!!event ? event.host.username : "test"}
                            </Card.Header>

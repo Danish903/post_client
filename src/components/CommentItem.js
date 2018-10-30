@@ -48,62 +48,70 @@ export default class CommentItem extends Component {
                const commentedUser = !isEditing && me && me.id === user.id;
                const isOwner = me && me.id === host.id;
                const canDelete = commentedUser || isOwner;
+
                return (
                   <Comment>
-                     <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg" />
-                     <Comment.Content>
-                        <Comment.Author as="a">
-                           {comment.user.username}
-                        </Comment.Author>
-                        <Comment.Metadata>
-                           <div>{moment(comment.createdAt).fromNow()}</div>
-                        </Comment.Metadata>
-                        <Comment.Text>
-                           {isEditing ? (
-                              <EditComment
-                                 comment={comment}
-                                 onCancel={this.handleEdit}
-                                 key={comment.id}
-                                 eventId={this.props.eventId}
-                                 me={me}
-                              />
-                           ) : (
-                              <p>{comment.text}</p>
-                           )}
-                        </Comment.Text>
-                        {canDelete && (
-                           <Mutation
-                              mutation={DELETE_COMMENT_MUTATION}
-                              variables={{ id: comment.id, eventId }}
-                              update={this._deleteUpdate}
-                              optimisticResponse={{
-                                 __typename: "Mutation",
-                                 deleteComment: {
-                                    __typename: "Comment",
-                                    id: comment.id
-                                 }
-                              }}
-                           >
-                              {deleteComment => (
-                                 <Comment.Actions>
-                                    <Comment.Action
-                                       style={{ color: "#BB2B2D" }}
-                                       onClick={deleteComment}
-                                    >
-                                       Delete
-                                    </Comment.Action>
-                                    {commentedUser && (
+                     <div style={{ display: "flex" }}>
+                        <div className="commentAvatar">
+                           <p>{user.username[0]}</p>
+                        </div>
+                        <Comment.Content>
+                           <Comment.Author as="a">
+                              {comment.user.username}
+                           </Comment.Author>
+                           <Comment.Metadata>
+                              <div>{moment(comment.createdAt).fromNow()}</div>
+                           </Comment.Metadata>
+                           <div style={{ flex: 1 }}>
+                              <Comment.Text>
+                                 {isEditing ? (
+                                    <EditComment
+                                       comment={comment}
+                                       onCancel={this.handleEdit}
+                                       key={comment.id}
+                                       eventId={this.props.eventId}
+                                       me={me}
+                                    />
+                                 ) : (
+                                    <p>{comment.text}</p>
+                                 )}
+                              </Comment.Text>
+                           </div>
+
+                           {canDelete && (
+                              <Mutation
+                                 mutation={DELETE_COMMENT_MUTATION}
+                                 variables={{ id: comment.id, eventId }}
+                                 update={this._deleteUpdate}
+                                 optimisticResponse={{
+                                    __typename: "Mutation",
+                                    deleteComment: {
+                                       __typename: "Comment",
+                                       id: comment.id
+                                    }
+                                 }}
+                              >
+                                 {deleteComment => (
+                                    <Comment.Actions>
                                        <Comment.Action
-                                          onClick={this.handleEdit}
+                                          style={{ color: "#BB2B2D" }}
+                                          onClick={deleteComment}
                                        >
-                                          Edit
+                                          Delete
                                        </Comment.Action>
-                                    )}
-                                 </Comment.Actions>
-                              )}
-                           </Mutation>
-                        )}
-                     </Comment.Content>
+                                       {commentedUser && (
+                                          <Comment.Action
+                                             onClick={this.handleEdit}
+                                          >
+                                             Edit
+                                          </Comment.Action>
+                                       )}
+                                    </Comment.Actions>
+                                 )}
+                              </Mutation>
+                           )}
+                        </Comment.Content>
+                     </div>
                   </Comment>
                );
             }}
