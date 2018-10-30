@@ -6,8 +6,13 @@ import AddCommentToPhoto from "./AddCommentToPhoto";
 import CommentList from "./CommentList";
 
 export const COMMENT_QUERY = gql`
-   query($eventId: ID!) {
-      getComment(eventId: $eventId, orderBy: createdAt_DESC) {
+   query($eventId: ID!, $after: String) {
+      getComment(
+         eventId: $eventId
+         orderBy: createdAt_DESC
+         first: 18
+         after: $after
+      ) {
          id
          text
          createdAt

@@ -39,7 +39,7 @@ export default class EventList extends Component {
                            },
                            updateQuery: (prev, { fetchMoreResult }) => {
                               if (!fetchMoreResult) return prev;
-                              console.log(fetchMoreResult);
+
                               if (fetchMoreResult.events.length < 2) {
                                  this.setState({ hasMoreItems: false });
                               }
