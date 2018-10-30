@@ -106,7 +106,7 @@ class LikeCount extends Component {
          data: { ...data2 }
       });
    };
-   handleLike = debounce(async (likePhoto, unLikePhoto, isLiked) => {
+   handleLike = async (likePhoto, unLikePhoto, isLiked) => {
       if (isLiked) {
          try {
             await unLikePhoto();
@@ -116,7 +116,7 @@ class LikeCount extends Component {
             await likePhoto();
          } catch (error) {}
       }
-   }, 200);
+   };
    render() {
       const { id, data, loading, exist, authenticated, isLiked } = this.props;
       if (loading) return <p>loading</p>;
