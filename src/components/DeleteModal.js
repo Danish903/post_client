@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { Button, Header, Image, Modal } from "semantic-ui-react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
+import { USER_POST_QUERY } from "./UserProfile";
 
 const DELETE_POST_MUTATION = gql`
-   mutation($id: ID!) {
-      deletePost(id: $id) {
+   mutation($id: ID!, $img_ID: String) {
+      deletePost(id: $id, img_ID: $img_ID) {
          id
       }
    }
@@ -22,12 +23,28 @@ class ModalExampleDimmer extends Component {
       this.setState({ open: false });
       await deletePost();
    };
+   _update = (cache, { data: { deletePost } }) => {
+      const data = cache.readQuery({ query: USER_POST_QUERY });
+      data.userPosts = data.userPosts.filter(post => post.id !== deletePost.id);
+      cache.writeQuery({ query: USER_POST_QUERY, data });
+   };
 
    render() {
       const { open } = this.state;
       const { event } = this.props;
       return (
-         <Mutation mutation={DELETE_POST_MUTATION} variables={{ id: event.id }}>
+         <Mutation
+            mutation={DELETE_POST_MUTATION}
+            variables={{ id: event.id, img_ID: event.imageURL_ID }}
+            update={this._update}
+            optimisticResponse={{
+               __typename: "Mutation",
+               deletePost: {
+                  __typename: "Event",
+                  id: event.id
+               }
+            }}
+         >
             {deletePost => (
                <>
                   <Button

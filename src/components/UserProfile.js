@@ -9,6 +9,7 @@ export const USER_POST_QUERY = gql`
          id
          title
          imageURL
+         imageURL_ID
          likes {
             id
          }
@@ -32,6 +33,7 @@ export const USER_POSTS_SUBSCRIPTION = gql`
             id
             title
             imageURL
+            imageURL_ID
             likes {
                id
             }
