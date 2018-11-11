@@ -2,7 +2,7 @@ import React from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
 import uuid from "uuid/v4";
-
+import _ from "lodash";
 import { Form, Input, Button } from "semantic-ui-react";
 import { COMMENT_QUERY } from "./CommentContainer";
 import User from "./User";
@@ -60,6 +60,7 @@ class AddCommentToPhoto extends React.PureComponent {
       });
 
       data.getComment = [createComment, ...data.getComment];
+      data.getComment = _.uniqBy(data.getComment, "id");
       cache.writeQuery({
          query: COMMENT_QUERY,
          variables: { eventId },

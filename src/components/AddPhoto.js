@@ -233,7 +233,7 @@ class AddPhoto extends React.Component {
                               disabled={this.state.loading}
                            />
                         </Form.Field>
-                        {/* <Form.Field>
+                        <Form.Field>
                            <Checkbox
                               type="checkbox"
                               label="Make your post private"
@@ -243,7 +243,7 @@ class AddPhoto extends React.Component {
                               onChange={this._onChange}
                               disabled={this.state.loading}
                            />
-                        </Form.Field> */}
+                        </Form.Field>
 
                         <Button
                            basic
