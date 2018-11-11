@@ -48,6 +48,9 @@ export const EVENT_SUBSCRIPTION = gql`
                id
             }
          }
+         previousValues {
+            id
+         }
       }
    }
 `;
@@ -75,6 +78,15 @@ const EventDashboard = () => {
                                  }
                                  return event;
                               })
+                           };
+                        }
+                        if (newEvent.mutation === "DELETED") {
+                           const id = newEvent.previousValues.id;
+                           return {
+                              ...prev,
+                              events: prev.events.filter(
+                                 event => event.id !== id
+                              )
                            };
                         }
                         return {
