@@ -11,6 +11,7 @@ import { SemanticToastContainer } from "react-semantic-toasts";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import ScrollToTop from "../components/ScrollToTop";
+import UserProfile from "../components/UserProfile";
 
 const Routes = () => (
    <Router>
@@ -23,6 +24,7 @@ const Routes = () => (
             <PublicRoute path="/login" component={Login} />
             <PrivateRoute path="/uploadImage" component={AddPhoto} />
             <Route path="/photoDetails/:id" component={PhotoDetails} />
+            <PrivateRoute path="/userprofile" component={UserProfile} />
             <Route component={PageNotFound} />
          </Switch>
       </ScrollToTop>

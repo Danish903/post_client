@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Query, Subscription } from "react-apollo";
+import { Query } from "react-apollo";
 import { gql } from "apollo-boost";
 import { Container, Card, Image, Grid, Header } from "semantic-ui-react";
 import moment from "moment";
@@ -48,64 +48,71 @@ class SubsComponent extends Component {
       const { event } = this.props;
 
       return (
-         <Grid celled="internally" stackable>
-            <Grid.Row columns={2}>
-               <Grid.Column
-                  style={{
-                     display: "flex",
-                     alignItems: "center",
-                     alignContent: "center",
-                     justifyContent: "center"
-                  }}
-               >
-                  <Image src={event.imageURL} />
-               </Grid.Column>
-               <Grid.Column>
-                  <div className="commentContainer">
-                     <Card fluid>
-                        <Card.Content>
-                           <div className="avatar">
-                              <p>{!!event ? event.host.username[0] : "NA"}</p>
-                           </div>
-                           <Card.Header>
-                              {!!event ? event.host.username : "test"}
-                           </Card.Header>
-                           <Card.Meta>
-                              {!!event
-                                 ? moment(event.createdAt).format("LLLL")
-                                 : null}
-                           </Card.Meta>
-                           <Card.Description>
-                              {!!event ? event.title : null}
-                           </Card.Description>
-                        </Card.Content>
-                        <Card.Content extra>
-                           <div
-                              style={{
-                                 backround: "red",
-                                 display: "flex",
-                                 justifyContent: "space-between"
-                              }}
-                           >
-                              <LikeButton id={event.id} event={event} />
-                              <DisableComment event={event} />
-                           </div>
-                        </Card.Content>
-                     </Card>
-                     {event.disableComment ? (
-                        <Header as="h4">
-                           Comments are disabled for this post
-                        </Header>
-                     ) : (
-                        <CommentContainer
-                           eventId={!!event ? event.id : null}
-                           host={event.host}
-                        />
-                     )}
-                  </div>
-               </Grid.Column>
-            </Grid.Row>
-         </Grid>
+         <>
+            {!event.published && (
+               <p>This post is private. Only you can see it.</p>
+            )}
+            <Grid celled="internally" stackable>
+               <Grid.Row columns={2}>
+                  <Grid.Column
+                     style={{
+                        display: "flex",
+                        alignItems: "center",
+                        alignContent: "center",
+                        justifyContent: "center"
+                     }}
+                  >
+                     <Image src={event.imageURL} />
+                  </Grid.Column>
+                  <Grid.Column>
+                     <div className="commentContainer">
+                        <Card fluid>
+                           <Card.Content>
+                              <div className="avatar">
+                                 <p>
+                                    {!!event ? event.host.username[0] : "NA"}
+                                 </p>
+                              </div>
+                              <Card.Header>
+                                 {!!event ? event.host.username : "test"}
+                              </Card.Header>
+                              <Card.Meta>
+                                 {!!event
+                                    ? moment(event.createdAt).format("LLLL")
+                                    : null}
+                              </Card.Meta>
+                              <Card.Description>
+                                 {!!event ? event.title : null}
+                              </Card.Description>
+                           </Card.Content>
+                           <Card.Content extra>
+                              <div
+                                 style={{
+                                    backround: "red",
+                                    display: "flex",
+                                    justifyContent: "space-between"
+                                 }}
+                              >
+                                 <LikeButton id={event.id} event={event} />
+                                 <DisableComment event={event} />
+                              </div>
+                           </Card.Content>
+                        </Card>
+                        {event.disableComment ? (
+                           <Header as="h4">
+                              Comments are disabled for this post
+                           </Header>
+                        ) : (
+                           <CommentContainer
+                              eventId={!!event ? event.id : null}
+                              host={event.host}
+                           />
+                        )}
+                     </div>
+                  </Grid.Column>
+               </Grid.Row>
+            </Grid>
+         </>
       );
    }
 }
@@ -120,16 +127,7 @@ export default class PhotoDetails extends Component {
                   if (loading) return <Loader />;
                   if (error) return <PageNotFound />;
 
-                  return (
-                     <Subscription
-                        subscription={SINGLE_EVENT_SUBSCRIPTION}
-                        variables={{ id: data.event.id }}
-                     >
-                        {() => (
-                           <SubsComponent event={!!data ? data.event : null} />
-                        )}
-                     </Subscription>
-                  );
+                  return <SubsComponent event={!!data ? data.event : null} />;
                }}
             </Query>
          </Container>

@@ -1,13 +1,35 @@
 import React, { Component } from "react";
-import { Button, Menu } from "semantic-ui-react";
+import { Button, Menu, Dropdown, Icon } from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import User from "./User";
 import { toast } from "react-semantic-toasts/build/toast";
 
+const options = [
+   {
+      key: "profile",
+      text: "Your Posts",
+      value: "profile"
+   },
+   { key: "settings", text: "Settings" },
+   {
+      key: "sign-out",
+      text: <span style={{ color: "red " }}>Sign Out</span>,
+      icon: "sign out",
+      value: -1
+   }
+];
+
 class Nav extends Component {
    state = { activeItem: "home" };
-
+   handleChange = (e, data) => {
+      console.log(data);
+      if (data.value === "profile") {
+         this.props.history.push("/userprofile");
+      } else if (data.value === -1) {
+         this.handleLogout(data.client);
+      }
+   };
    handleItemClick = (e, { name }) => {
       this.setState({ activeItem: name });
       this.props.history.push("/");
@@ -54,12 +76,17 @@ class Nav extends Component {
                                  content="Create a post"
                               />
                            </Menu.Item>
+
                            <Menu.Item>
-                              <Button
-                                 basic
-                                 color="orange"
-                                 content="Logout"
-                                 onClick={() => this.handleLogout(client)}
+                              <Dropdown
+                                 onChange={this.handleChange}
+                                 trigger={
+                                    <span>
+                                       <Icon name="user" /> Hello, {me.username}
+                                    </span>
+                                 }
+                                 options={options}
+                                 client={client}
                               />
                            </Menu.Item>
                         </Menu.Menu>
