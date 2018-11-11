@@ -24,7 +24,7 @@ export default class UserPostsList extends Component {
          error
       } = this.props;
 
-      if (loading) return null;
+      if (loading) return <p>Loading...</p>;
       if (error) return <p>Error</p>;
       if (userPosts.length === 0) return <p>You don't have any posts.</p>;
       return (

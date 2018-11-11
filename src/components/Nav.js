@@ -36,13 +36,16 @@ class Nav extends Component {
 
    navigateToSignUp = () => this.props.history.push("/signup");
    handleLogout = client => {
-      localStorage.clear();
-      client.resetStore();
-      toast({
-         description: `You've been successfully logged out!`,
-         icon: "warning sign",
-         type: "success"
-      });
+      setTimeout(() => {
+         localStorage.clear();
+         client.resetStore();
+         toast({
+            description: `You've been successfully logged out!`,
+            icon: "warning sign",
+            type: "success"
+         });
+         this.props.history.push("/");
+      }, 500);
    };
    render() {
       const { activeItem } = this.state;
