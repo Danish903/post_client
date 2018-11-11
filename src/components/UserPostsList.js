@@ -26,6 +26,7 @@ export default class UserPostsList extends Component {
 
       if (loading) return null;
       if (error) return <p>Error</p>;
+      if (userPosts.length === 0) return <p>You don't have any posts.</p>;
       return (
          <Grid style={{ paddingLeft: "50px" }}>
             {userPosts.map((event, i) => (

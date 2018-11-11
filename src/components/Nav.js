@@ -23,7 +23,6 @@ const options = [
 class Nav extends Component {
    state = { activeItem: "home" };
    handleChange = (e, data) => {
-      console.log(data);
       if (data.value === "profile") {
          this.props.history.push("/userprofile");
       } else if (data.value === -1) {
