@@ -21,6 +21,7 @@ const CREATE_EVENT_MUTATION = gql`
       $description: String!
       $published: Boolean!
       $disableComment: Boolean!
+      $imageURL_ID: String!
    ) {
       createEvent(
          data: {
@@ -29,6 +30,7 @@ const CREATE_EVENT_MUTATION = gql`
             description: $description
             published: $published
             disableComment: $disableComment
+            imageURL_ID: $imageURL_ID
          }
       ) {
          id
@@ -36,6 +38,7 @@ const CREATE_EVENT_MUTATION = gql`
          description
          published
          imageURL
+         imageURL_ID
          likes {
             id
          }
@@ -55,6 +58,7 @@ class AddPhoto extends React.Component {
    state = {
       title: "",
       imageURL: "",
+      imageURL_ID: "",
       description: "",
       isPublished: false,
       published: true,
@@ -114,8 +118,10 @@ class AddPhoto extends React.Component {
             }
          );
          const file = await res.json();
+         console.log(file);
          this.setState({
             imageURL: file.secure_url,
+            imageURL_ID: file.public_id,
             imageUploaded: true
          });
          this.imageUploadedSuccessfully();
