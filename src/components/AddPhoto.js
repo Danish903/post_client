@@ -12,6 +12,7 @@ import {
    Header
 } from "semantic-ui-react";
 import { toast } from "react-semantic-toasts/build/toast";
+import { USER_POST_QUERY } from "./UserProfile";
 
 const CREATE_EVENT_MUTATION = gql`
    mutation(
@@ -153,7 +154,12 @@ class AddPhoto extends React.Component {
       return (
          <Mutation
             mutation={CREATE_EVENT_MUTATION}
-            refetchQueries={[{ query: GET_EVENTS_QUERY }]}
+            refetchQueries={[
+               { query: GET_EVENTS_QUERY },
+               {
+                  query: USER_POST_QUERY
+               }
+            ]}
          >
             {(createEvent, { data, loading, error }) => {
                if (error) return <p>{error.message}</p>;
