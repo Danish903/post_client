@@ -3,7 +3,7 @@ import { Button, Header, Image, Modal } from "semantic-ui-react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
 import { USER_POST_QUERY } from "./UserProfile";
-
+import { toast } from "react-semantic-toasts";
 const DELETE_POST_MUTATION = gql`
    mutation($id: ID!, $img_ID: String) {
       deletePost(id: $id, img_ID: $img_ID) {
@@ -21,7 +21,13 @@ class ModalExampleDimmer extends Component {
 
    deletePost = async deletePost => {
       this.setState({ open: false });
-      await deletePost();
+      deletePost().then(() => {
+         toast({
+            description: `Your post is removed.`,
+            icon: "warning sign",
+            type: "success"
+         });
+      });
    };
    _update = (cache, { data: { deletePost } }) => {
       const data = cache.readQuery({ query: USER_POST_QUERY });
