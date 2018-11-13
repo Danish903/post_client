@@ -118,7 +118,7 @@ class AddPhoto extends React.Component {
             }
          );
          const file = await res.json();
-         console.log(file);
+
          this.setState({
             imageURL: file.secure_url,
             imageURL_ID: file.public_id,

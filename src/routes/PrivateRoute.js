@@ -7,6 +7,7 @@ export const isAuthenticate = () => {
    const jwt = localStorage.getItem("token");
    if (!jwt) return false;
    const decoded = jsonwebtoken.decode(jwt);
+   if (!decoded) return false;
    if (!(Date.now() / 1000 < decoded.exp)) return false;
    return true;
 };

@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import User from "./User";
 import { toast } from "react-semantic-toasts/build/toast";
-
+import { isAuthenticate } from "../routes/PrivateRoute";
 const options = [
    {
       key: "profile",
@@ -67,7 +67,7 @@ class Nav extends Component {
                         </Menu.Item>
                      </Menu.Item>
 
-                     {data.me && (
+                     {isAuthenticate() && data.me && (
                         <Menu.Menu position="right">
                            <Menu.Item>
                               <Button
@@ -95,7 +95,7 @@ class Nav extends Component {
                         </Menu.Menu>
                      )}
 
-                     {data && !data.me && (
+                     {!isAuthenticate() && (
                         <Menu.Menu position="right">
                            <Menu.Item>
                               <Button
