@@ -1,7 +1,7 @@
 import React from "react";
 import { compose, graphql } from "react-apollo";
 import { gql } from "apollo-boost";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
    Button,
    Container,
