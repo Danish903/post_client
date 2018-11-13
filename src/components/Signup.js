@@ -26,14 +26,7 @@ const SIGN_UP_MUTATION = gql`
    }
 `;
 const Signup = props => {
-   const {
-      errors,
-      handleSubmit,
-      isSubmitting,
-      data: { me }
-   } = props;
-
-   if (me) return <Redirect to="/" />;
+   const { errors, handleSubmit, isSubmitting } = props;
    return (
       <Container fluid={false} text>
          {errors && errors.message ? (
@@ -102,6 +95,7 @@ export default compose(
                query: ME_QUERY
             });
             resetForm();
+            props.history.push("/");
          } catch (error) {
             setErrors(error);
          }

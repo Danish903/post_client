@@ -58,6 +58,8 @@ class UserProfile extends Component {
       return (
          <Query query={USER_POST_QUERY}>
             {({ subscribeToMore, ...result }) => {
+               if (result.error)
+                  return <p> {result.error.message}. Try re login again </p>;
                return (
                   <UserPostsList
                      {...result}

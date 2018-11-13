@@ -34,7 +34,6 @@ const Login = ({
    data: { me, loading }
 }) => {
    if (loading) return <Loader />;
-   if (me) return <Redirect to="/" />;
    return (
       <Container fluid={false} text>
          {errors && errors.message ? (
@@ -112,6 +111,7 @@ export default compose(
             });
 
             resetForm();
+            props.history.push("/");
          } catch (error) {
             setErrors(error);
          }

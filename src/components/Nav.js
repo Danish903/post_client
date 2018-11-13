@@ -51,7 +51,7 @@ class Nav extends Component {
       const { activeItem } = this.state;
       return (
          <User>
-            {({ client, data: { me }, loading }) => {
+            {({ client, data, loading, error }) => {
                return (
                   <Menu size="tiny">
                      <Menu.Item
@@ -67,7 +67,7 @@ class Nav extends Component {
                         </Menu.Item>
                      </Menu.Item>
 
-                     {me && (
+                     {data.me && (
                         <Menu.Menu position="right">
                            <Menu.Item>
                               <Button
@@ -84,7 +84,8 @@ class Nav extends Component {
                                  onChange={this.handleChange}
                                  trigger={
                                     <span>
-                                       <Icon name="user" /> Hello, {me.username}
+                                       <Icon name="user" /> Hello,{" "}
+                                       {data.me.username}
                                     </span>
                                  }
                                  options={options}
@@ -94,7 +95,7 @@ class Nav extends Component {
                         </Menu.Menu>
                      )}
 
-                     {!me && (
+                     {data && !data.me && (
                         <Menu.Menu position="right">
                            <Menu.Item>
                               <Button
