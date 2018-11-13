@@ -11,9 +11,11 @@ export default class EventList extends Component {
       hasMoreItems: true
    };
    componentDidMount() {
-      this.querySubscription = this.props.subscribeToNewEvent();
+      this.unsubscribe = this.props.subscribeToNewEvent();
    }
-
+   componentWillUnmount() {
+      this.unsubscribe();
+   }
    handleScroll = () => {
       if (this.scroller) {
          console.log(this.scroller);
@@ -27,46 +29,45 @@ export default class EventList extends Component {
       if (data.length === 0) return <p>No pictures found currently</p>;
       return (
          <div>
-            {!!data &&
-               data.events.length > 0 && (
-                  <InfiniteScroll
-                     key={uuid()}
-                     pageStart={0}
-                     loadMore={() =>
-                        fetchMore({
-                           variables: {
-                              after: data.events[data.events.length - 1].id
-                           },
-                           updateQuery: (prev, { fetchMoreResult }) => {
-                              if (!fetchMoreResult) return prev;
+            {!!data && data.events.length > 0 && (
+               <InfiniteScroll
+                  key={uuid()}
+                  pageStart={0}
+                  loadMore={() =>
+                     fetchMore({
+                        variables: {
+                           after: data.events[data.events.length - 1].id
+                        },
+                        updateQuery: (prev, { fetchMoreResult }) => {
+                           if (!fetchMoreResult) return prev;
 
-                              if (fetchMoreResult.events.length < 2) {
-                                 this.setState({ hasMoreItems: false });
-                              }
-                              return {
-                                 ...prev,
-                                 events: [
-                                    ...prev.events,
-                                    ...fetchMoreResult.events
-                                 ]
-                              };
+                           if (fetchMoreResult.events.length < 2) {
+                              this.setState({ hasMoreItems: false });
                            }
-                        })
-                     }
-                     hasMore={!loading && this.state.hasMoreItems}
-                     initialLoad={false}
-                     loader={
-                        loading &&
-                        this.state.hasMoreItems && <Loader key={uuid()} />
-                     }
-                  >
-                     <Grid>
-                        {data.events.map(event => (
-                           <EventListItem key={event.id} event={event} />
-                        ))}
-                     </Grid>
-                  </InfiniteScroll>
-               )}
+                           return {
+                              ...prev,
+                              events: [
+                                 ...prev.events,
+                                 ...fetchMoreResult.events
+                              ]
+                           };
+                        }
+                     })
+                  }
+                  hasMore={!loading && this.state.hasMoreItems}
+                  initialLoad={false}
+                  loader={
+                     loading &&
+                     this.state.hasMoreItems && <Loader key={uuid()} />
+                  }
+               >
+                  <Grid>
+                     {data.events.map(event => (
+                        <EventListItem key={event.id} event={event} />
+                     ))}
+                  </Grid>
+               </InfiniteScroll>
+            )}
          </div>
       );
    }

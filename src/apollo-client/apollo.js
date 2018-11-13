@@ -11,7 +11,7 @@ const getClient = (
    websocketURL = process.env.REACT_APP_WS_URL
 ) => {
    // Setup the authorization header for the http client
-   const jwt = localStorage.getItem("token");
+   let jwt = localStorage.getItem("token");
 
    const requestLink = setContext((_, { headers }) => {
       // get the authentication token from local storage if it exists

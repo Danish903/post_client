@@ -1,27 +1,27 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import User from "../components/User";
-import Loader from "../components/Loader";
 
+import jsonwebtoken from "jsonwebtoken";
+
+export const isAuthenticate = () => {
+   const jwt = localStorage.getItem("token");
+   if (!jwt) return false;
+   const decoded = jsonwebtoken.decode(jwt);
+   if (!(Date.now() / 1000 < decoded.exp)) return false;
+   return true;
+};
 const PrivateRoute = ({ component: Component, ...rest }) => {
    return (
-      <User>
-         {({ data: { me }, loading }) => {
-            if (loading) return <Loader />;
-            return (
-               <Route
-                  {...rest}
-                  render={props =>
-                     !!me ? (
-                        <Component {...props} />
-                     ) : (
-                        <Redirect to={"/login"} />
-                     )
-                  }
-               />
-            );
-         }}
-      </User>
+      <Route
+         {...rest}
+         render={props =>
+            isAuthenticate() ? (
+               <Component {...props} />
+            ) : (
+               <Redirect to={"/login"} />
+            )
+         }
+      />
    );
 };
 
