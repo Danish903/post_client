@@ -13,31 +13,6 @@ import {
 import { toast } from "react-semantic-toasts/build/toast";
 import { USER_POST_QUERY } from "./UserProfile";
 import Dropzone from "./Dropzone";
-// const CREATE_EVENT_MUTATION = gql`
-//    mutation(
-//       $title: String!
-//       $imageURL: String!
-//       $description: String!
-//       $published: Boolean!
-//       $disableComment: Boolean!
-//       $imageURL_ID: String!
-//       $image: Upload
-//    ) {
-//       createEvent(
-//          data: {
-//             title: $title
-//             imageURL: $imageURL
-//             description: $description
-//             published: $published
-//             disableComment: $disableComment
-//             imageURL_ID: $imageURL_ID
-//             image: $image
-//          }
-//       ) {
-//          id
-//       }
-//    }
-// `;
 
 const styleLoadingImage = { opacity: "0.3", filter: "grayscale(100)" };
 const upload = gql`
@@ -75,7 +50,8 @@ const initState = {
    published: true,
    disableComment: false,
    file: null,
-   imagePreview: ""
+   imagePreview: "",
+   error: ""
 };
 class AddPhoto extends React.Component {
    state = {
@@ -90,7 +66,8 @@ class AddPhoto extends React.Component {
       loading: false,
       imageUploaded: false,
       file: null,
-      imagePreview: null
+      imagePreview: null,
+      error: ""
    };
 
    _onChange = (e, data) => {
@@ -139,6 +116,11 @@ class AddPhoto extends React.Component {
    };
 
    _onSubmit = async upload => {
+      if (!this.state.file || !this.state.title || !this.state.description) {
+         this.setState({ error: "You need to upload an image" });
+         return;
+      }
+      this.setState({ error: "" });
       const variables = {
          title: this.state.title,
          imageURL: this.state.imageURL,
@@ -196,6 +178,11 @@ class AddPhoto extends React.Component {
                         className="attached fluid segment"
                         onSubmit={() => this._onSubmit(upload)}
                      >
+                        {!!this.state.error && !this.state.imagePreview && (
+                           <Message negative>
+                              <p>{this.state.error}</p>
+                           </Message>
+                        )}
                         {!this.state.imagePreview && !loading && (
                            <Dropzone onDrop={this.onDrop} />
                         )}
