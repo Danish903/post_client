@@ -95,11 +95,12 @@ export default compose(
                query: ME_QUERY
             });
             resetForm();
+            setSubmitting(false);
             props.history.push("/");
          } catch (error) {
             setErrors(error);
+            setSubmitting(false);
          }
-         setSubmitting(false);
       }
    })
 )(Signup);

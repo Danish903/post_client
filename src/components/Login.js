@@ -114,8 +114,8 @@ export default compose(
             props.history.push("/");
          } catch (error) {
             setErrors(error);
+            setSubmitting(false);
          }
-         setSubmitting(false);
       }
    })
 )(Login);
