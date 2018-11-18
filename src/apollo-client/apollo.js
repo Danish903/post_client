@@ -1,9 +1,10 @@
-import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
+import { ApolloClient, InMemoryCache } from "apollo-boost";
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
 import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
+import { createUploadLink } from "apollo-upload-client";
 
 //process.env.REACT_APP_SERVER_URL
 const getClient = (
@@ -108,9 +109,8 @@ const getClient = (
          }
       }),
       requestLink,
-      new HttpLink({
-         uri: httpURL,
-         credentials: "same-origin"
+      new createUploadLink({
+         uri: httpURL
       })
    ]);
 
