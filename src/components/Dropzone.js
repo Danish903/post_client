@@ -6,7 +6,8 @@ const dropzoneStyle = {
    height: "20%",
    border: "1px solid rgba(34,36,38,.15)",
    marginBottom: "10px",
-   textAlign: "center"
+   textAlign: "center",
+   cursor: "pointer"
 };
 export default class DZ extends React.Component {
    render() {
