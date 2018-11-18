@@ -8,14 +8,41 @@ import {
    Message,
    Container,
    TextArea,
-   Checkbox,
-   Header
+   Checkbox
 } from "semantic-ui-react";
 import { toast } from "react-semantic-toasts/build/toast";
 import { USER_POST_QUERY } from "./UserProfile";
+import Dropzone from "./Dropzone";
+// const CREATE_EVENT_MUTATION = gql`
+//    mutation(
+//       $title: String!
+//       $imageURL: String!
+//       $description: String!
+//       $published: Boolean!
+//       $disableComment: Boolean!
+//       $imageURL_ID: String!
+//       $image: Upload
+//    ) {
+//       createEvent(
+//          data: {
+//             title: $title
+//             imageURL: $imageURL
+//             description: $description
+//             published: $published
+//             disableComment: $disableComment
+//             imageURL_ID: $imageURL_ID
+//             image: $image
+//          }
+//       ) {
+//          id
+//       }
+//    }
+// `;
 
-const CREATE_EVENT_MUTATION = gql`
+const styleLoadingImage = { opacity: "0.3", filter: "grayscale(100)" };
+const upload = gql`
    mutation(
+      $file: Upload!
       $title: String!
       $imageURL: String!
       $description: String!
@@ -23,7 +50,7 @@ const CREATE_EVENT_MUTATION = gql`
       $disableComment: Boolean!
       $imageURL_ID: String!
    ) {
-      createEvent(
+      singleUpload(
          data: {
             title: $title
             imageURL: $imageURL
@@ -31,29 +58,25 @@ const CREATE_EVENT_MUTATION = gql`
             published: $published
             disableComment: $disableComment
             imageURL_ID: $imageURL_ID
+            file: $file
          }
       ) {
-         id
-         title
-         description
-         published
-         imageURL
-         imageURL_ID
-         likes {
-            id
-         }
-         likesCount
-         host {
-            id
-            username
-         }
-         comments {
-            id
-         }
+         success
       }
    }
 `;
 
+const initState = {
+   title: "",
+   imageURL: "",
+   imageURL_ID: "",
+   description: "",
+   isPublished: false,
+   published: true,
+   disableComment: false,
+   file: null,
+   imagePreview: ""
+};
 class AddPhoto extends React.Component {
    state = {
       title: "",
@@ -65,7 +88,9 @@ class AddPhoto extends React.Component {
       disableComment: false,
       image: "",
       loading: false,
-      imageUploaded: false
+      imageUploaded: false,
+      file: null,
+      imagePreview: null
    };
 
    _onChange = (e, data) => {
@@ -87,6 +112,17 @@ class AddPhoto extends React.Component {
       }
    };
 
+   onDrop = ([file]) => {
+      const preview = URL.createObjectURL(file);
+      this.setState({
+         file,
+         image: file,
+         imagePreview: preview,
+         imageURL: preview,
+         imageURL_ID: preview
+      });
+   };
+
    imageUploading = () => {
       toast({
          description: `Image uploading...`,
@@ -101,65 +137,36 @@ class AddPhoto extends React.Component {
          type: "success"
       });
    };
-   uploadImage = async e => {
-      const { files } = e.target;
 
-      const data = new FormData();
-      data.append("file", files[0]);
-      data.append("upload_preset", "photoups");
+   _onSubmit = async upload => {
+      const variables = {
+         title: this.state.title,
+         imageURL: this.state.imageURL,
+         description: this.state.description,
+         published: this.state.published,
+         disableComment: this.state.disableComment,
+         imageURL_ID: this.state.imageURL_ID,
+
+         file: this.state.file
+      };
       this.setState({ loading: true });
-      this.imageUploading();
       try {
-         const res = await fetch(
-            "https://api.cloudinary.com/v1_1/dluo0wvst/image/upload",
-            {
-               method: "POST",
-               body: data
-            }
-         );
-         const file = await res.json();
+         await upload({ variables });
 
-         this.setState({
-            imageURL: file.secure_url,
-            imageURL_ID: file.public_id,
-            imageUploaded: true
-         });
+         this.setState({ loading: false, ...initState });
          this.imageUploadedSuccessfully();
-      } catch (error) {
-         this.setState({
-            imageUploaded: false
-         });
-      }
-
-      this.setState({ loading: false });
-   };
-   _onSubmit = async createEvent => {
-      const data = { ...this.state };
-      delete data.isPublished;
-      if (data.imageURL.length === 0) {
-         toast({
-            description: `Upload a image`,
-            icon: "warning sign",
-            type: "error"
-         });
-         return;
-      }
-      try {
-         await createEvent({
-            variables: {
-               ...data
-            }
-         });
          this.props.history.push("/");
+         return;
       } catch (error) {
          console.log(error);
       }
+      this.setState({ loading: false, ...initState });
    };
 
    render() {
       return (
          <Mutation
-            mutation={CREATE_EVENT_MUTATION}
+            mutation={upload}
             refetchQueries={[
                { query: GET_EVENTS_QUERY },
                {
@@ -167,7 +174,7 @@ class AddPhoto extends React.Component {
                }
             ]}
          >
-            {(createEvent, { data, loading, error }) => {
+            {(upload, { data, loading, error }) => {
                if (error) return <p>{error.message}</p>;
                return (
                   <Container>
@@ -176,30 +183,21 @@ class AddPhoto extends React.Component {
                         header="Upload your beautiful pciture !"
                         content="Fill out the form below to share your photo"
                      />
+
+                     {this.state.imagePreview && (
+                        <img
+                           width="200px"
+                           src={this.state.imagePreview}
+                           alt="imagdde"
+                           style={loading ? styleLoadingImage : null}
+                        />
+                     )}
                      <Form
                         className="attached fluid segment"
-                        onSubmit={() => this._onSubmit(createEvent)}
+                        onSubmit={() => this._onSubmit(upload)}
                      >
-                        {this.state.imageUploaded ? (
-                           <Header as="h4" color="grey">
-                              Image uploaded
-                           </Header>
-                        ) : (
-                           <Form.Input
-                              fluid
-                              label={
-                                 this.state.loading
-                                    ? "Image uploading...wait until image is uploaded"
-                                    : "Upload a Image"
-                              }
-                              type="file"
-                              name="file"
-                              value={this.state.image}
-                              onChange={this.uploadImage}
-                              loading={this.state.loading}
-                              disabled={this.state.loading}
-                              required
-                           />
+                        {!this.state.imagePreview && !loading && (
+                           <Dropzone onDrop={this.onDrop} />
                         )}
                         <Form.Field>
                            <Form.Input
@@ -231,6 +229,7 @@ class AddPhoto extends React.Component {
                               name="description"
                               onChange={this._onChange}
                               required
+                              value={this.state.description}
                               disabled={this.state.loading}
                            />
                         </Form.Field>
